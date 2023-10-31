@@ -8,7 +8,19 @@ export const useCurrencyOptions = (
 ) => {
   const fetchCurrencies = useCallback(async () => {
     const {data} = await axios.get('/get_all_currencies');
-    return data;
+
+    const prioritySymbols = ['etc', 'btc', 'usdt'];
+
+    const priorityCurrencies = data.filter(currency =>
+      prioritySymbols.includes(currency.symbol),
+    );
+    const nonPriorityCurrencies = data.filter(
+      currency => !prioritySymbols.includes(currency.symbol),
+    );
+
+    const sortedData = [...priorityCurrencies, ...nonPriorityCurrencies];
+
+    return sortedData;
   }, []);
 
   const {data} = useQuery({queryKey: ['todos'], queryFn: fetchCurrencies});

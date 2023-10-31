@@ -8,6 +8,7 @@ import {
   useDisclose,
 } from 'native-base';
 import React, {FC, useCallback} from 'react';
+import {Keyboard} from 'react-native';
 import {SvgUri} from 'react-native-svg';
 
 type TransferInputProps = {
@@ -85,7 +86,10 @@ export const TransferInput: FC<TransferInputProps> = ({
         backgroundColor={'#d6e1eb'}
         justifyContent={'center'}
         isDisabled={isDisabled}
-        onPress={onOpen}>
+        onPress={() => {
+          onOpen();
+          Keyboard.dismiss();
+        }}>
         <Text fontSize={10} marginLeft={2}>
           {service.toUpperCase()}
         </Text>

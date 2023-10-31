@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, useCallback, useMemo} from 'react';
+import {useState, useEffect, useCallback, useMemo} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {debounce} from 'lodash';
 import axios from '../../../axios';
@@ -7,18 +7,20 @@ import {Toast} from 'native-base';
 export const useCurrencyConversion = () => {
   const [sendAmount, setSendAmount] = useState<string>('0.1');
   const [sendCurrency, setSendCurrency] = useState('btc');
-
-  const [debouncedSendAmount, setDebouncedSendAmount] = useState(sendAmount);
-  const debouncer = useRef(
-    debounce(newAmount => setDebouncedSendAmount(newAmount), 500),
-  );
-
   const [receiveAmount, setReceiveAmount] = useState<string>();
   const [receiveCurrency, setReceiveCurrency] = useState('eth');
 
+  const [debouncedSendAmount, setDebouncedSendAmount] = useState(sendAmount);
+
+  const debouncedSetSendAmount = useCallback(
+    debounce(setDebouncedSendAmount, 1000),
+    [],
+  );
+
   useEffect(() => {
-    debouncer.current(sendAmount);
-  }, [sendAmount]);
+    debouncedSetSendAmount(sendAmount);
+    return () => debouncedSetSendAmount.cancel();
+  }, [sendAmount, debouncedSetSendAmount]);
 
   const fetchEstimate = useCallback(
     async (currencyFrom: string, currencyTo: string, amount: string) => {
@@ -41,6 +43,9 @@ export const useCurrencyConversion = () => {
       fetchEstimate(sendCurrency, receiveCurrency, debouncedSendAmount),
     enabled: !!debouncedSendAmount,
     retry: false,
+    staleTime: 0,
+    refetchInterval: 5000,
+    gcTime: 1,
   });
 
   const {
@@ -59,7 +64,6 @@ export const useCurrencyConversion = () => {
       });
 
       setReceiveAmount(undefined);
-      setSendAmount('');
     }
   }, [error, isError]);
 
