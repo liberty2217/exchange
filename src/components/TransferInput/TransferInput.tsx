@@ -8,15 +8,16 @@ import {
   useDisclose,
 } from 'native-base';
 import React, {FC, useCallback} from 'react';
+import {SvgUri} from 'react-native-svg';
 
 type TransferInputProps = {
   service: string;
-  setService: (service: string) => void;
+  setService?: (service: string) => void;
   containerClassName?: string;
   inputPlaceholder: string;
   amount?: string;
-  onChangeAmount: (amount: string) => void;
-  options: any[];
+  onChangeAmount?: (amount: string) => void;
+  options?: any[];
   isDisabled?: boolean;
 };
 
@@ -31,7 +32,7 @@ export const TransferInput: FC<TransferInputProps> = ({
   isDisabled,
 }) => {
   const onChangeValue = useCallback(
-    (value: string) => onChangeAmount(value),
+    (value: string) => onChangeAmount?.(value),
     [onChangeAmount],
   );
 
@@ -41,14 +42,21 @@ export const TransferInput: FC<TransferInputProps> = ({
     ({item}) => (
       <Actionsheet.Item
         onPress={() => {
-          console.log('renderOption item', item);
-          setService(item.symbol);
+          setService?.(item.symbol);
           onClose();
         }}>
-        {item.name}
+        <Box className="flex-row">
+          <SvgUri width="20" height="20" uri={item.image} className="mr-2" />
+          {item.name}
+        </Box>
       </Actionsheet.Item>
     ),
     [onClose, setService],
+  );
+
+  console.log(
+    'options',
+    options?.find(item => item.symbol === 'eth'),
   );
 
   return (
@@ -66,6 +74,9 @@ export const TransferInput: FC<TransferInputProps> = ({
         value={amount}
         onChangeText={onChangeValue}
         isDisabled={isDisabled}
+        _disabled={{
+          opacity: 1,
+        }}
       />
 
       <Pressable
@@ -73,6 +84,7 @@ export const TransferInput: FC<TransferInputProps> = ({
         borderRadius={0}
         backgroundColor={'#d6e1eb'}
         justifyContent={'center'}
+        isDisabled={isDisabled}
         onPress={onOpen}>
         <Text fontSize={10} marginLeft={2}>
           {service.toUpperCase()}
