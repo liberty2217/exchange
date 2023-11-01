@@ -3,11 +3,17 @@
 This is a Crypto Exchange app based on typescript, @tank/query (react-query), and NativeBase primarily.
 
 ## IOS
-https://github.com/liberty2217/exchange/assets/71078231/1be83351-e534-4bbd-b8c6-ccc1b5586213
+
+
+
+https://github.com/liberty2217/exchange/assets/71078231/00a00e28-dfd7-4270-8b44-dbab3c449ed8
 
 
 ## Android
-https://github.com/liberty2217/exchange/assets/71078231/4e1ee4d8-8334-456f-9782-815583b407c8
+
+
+
+https://github.com/liberty2217/exchange/assets/71078231/80dca4c1-6613-4aa2-b45f-282e9d25fe3b
 
 
 # Getting Started
